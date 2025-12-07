@@ -1,0 +1,5 @@
+To implement Stripe Checkout for the application fee, I would start by creating a secure backend endpoint that calls Stripe’s API to generate a Checkout Session. This session will include the amount, currency, user email, and the success/cancel URLs. When the session is created, I would store a payment_request record in the database linking the session_id to the application.
+
+The user is then redirected to Stripe’s hosted checkout page. When the payment is completed, Stripe will send a webhook event (checkout.session.completed) to our backend. In this webhook handler, I would verify the Stripe signature, fetch the session details, and update the payment_request status to “paid.”
+
+Next, I would update the corresponding application record by marking its payment_status as paid and optionally moving the application to the next stage (e.g., “fee_received”) or recording a timeline event. Failed or expired payments would also be updated through webhook events. This ensures a secure, reliable, and automated payment flow.
